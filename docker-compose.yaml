@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+      - mix:/root/.mix
+    ports:
+      - 4000:4000
+    environment:
+      SERVER_IP: 127.0.0.1
+      SERVER_PORT: 8390
+      SERVER_HOST: localhost
+    command: bash
+    tty: true
+    stdin_open: true
+    depends_on:
+      - shadowsocks
+
+  shadowsocks:
+    image: teddysun/shadowsocks-rust
+    restart: always
+    command: "ssmanager --manager-address 0.0.0.0:1234"
+    ports:
+      - "8390/udp"
+      - "8390/tcp"
+
+volumes:
+  mix:
+
